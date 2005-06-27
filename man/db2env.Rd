@@ -49,6 +49,11 @@ env <- db2env(db)
 ls(env)  ## "a", "b"
 print(env$b)
 mean(env$a)
+env$a <- rnorm(100)
+mean(env$a)
+
+env$b[1:5] <- 5:1
+print(env$b)
 }
 
 \keyword{database}

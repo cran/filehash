@@ -15,7 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(filehash)
-Simple file-based hash table (version 0.2)
+Simple file-based hash table (version 0.2-1)
 > 
 > ## Create a simple database
 > 
@@ -74,6 +74,14 @@ Simple file-based hash table (version 0.2)
  num [1:1000] 0.0854 0.3317 0.5647 0.4989 0.4549 ...
 > env$other
 [1] "hello"
+> 
+> env$b <- rnorm(100)
+> mean(env$b)
+[1] -0.02208835
+> 
+> env$a[1:5] <- 5:1
+> print(env$a)
+ [1]  5  4  3  2  1  6  7  8  9 10
 > 
 > dbDelete(db, "c")
 [1] TRUE

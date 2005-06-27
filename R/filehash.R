@@ -29,8 +29,9 @@ setMethod("db2env", "filehash",
                   key <- k
                   function(value) {
                       if(!missing(value))
-                          stop("object is read only")
-                      dbFetch(db, key)
+                          dbInsert(db, key, value)
+                      else
+                          dbFetch(db, key)
                   }
               }
               for(k in keys) 

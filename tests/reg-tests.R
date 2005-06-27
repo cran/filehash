@@ -24,6 +24,12 @@ env$c
 str(env$d)
 env$other
 
+env$b <- rnorm(100)
+mean(env$b)
+
+env$a[1:5] <- 5:1
+print(env$a)
+
 dbDelete(db, "c")
 
 tryCatch(print(env$c), error = function(e) print(e))
