@@ -1,0 +1,6 @@
+exportClasses("filehash")
+
+exportMethods("dbInsert", "dbFetch", "dbExists", "dbList", "dbDelete",
+              "dbReorganize", "db2env")
+
+export("dbCreate", "dbInitialize")
