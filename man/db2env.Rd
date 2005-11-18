@@ -1,19 +1,25 @@
-\name{db2env}
+\name{dbLoad}
 \alias{db2env}
+\alias{db2env,filehash-method}
+\alias{dbLoad}
+\alias{dbLoad,filehash,environment-method}
 
 \title{Load database into environment}
 \description{
   Load entire database into an environment
 }
 \usage{
-db2env(db)
+db2env(db, ...)
+dbLoad(db, env, ...)
 }
 \arguments{
   \item{db}{database object}
+  \item{env}{an environment}
+  \item{...}{other arguments passed to methods}
 }
 \details{
-  \code{db2env} is generic but there is a method for objects of class
-  \code{"filehash"}.
+  \code{db2env} and \code{dbLoad} are generics, but there are methods
+  for objects of class \code{"filehash"}.
   
   \code{db2env} loads the entire database \code{db} into an environment
   via calls to \code{makeActiveBinding}.  Therefore, the data themselves
@@ -23,20 +29,28 @@ db2env(db)
   database.  If the data in the database is changed, the changes will be
   reflected in the environment.
 
-  The use of \code{makeActiveBinding} allows for potentially large
-  databases to, at least conceptually, be used in R, as long as you
-  don't need simultaneous access to all of the elements in the
-  database.  
+  \code{dbLoad}  loads objects in the database directly into the
+  environment specified (like \code{load} does).  \code{dbLoad} takes a
+  second argument \code{env}, which is an environment, and the default for
+  \code{env} is \code{parent.frame(n = 2)}. 
+
+  The use of \code{makeActiveBinding} in \code{db2env} and \code{dbLoad}
+  allows for potentially large databases to, at least conceptually, be
+  used in R, as long as you don't need simultaneous access to all of the
+  elements in the database.  
 }
+
 \value{
-  An environment is returned, the elements of which are the keys of the
-  database.  
+  For \code{db2env}, an environment is returned, the elements of which
+  are the keys of the database.  For \code{dbLoad}, a character vector
+  is returned (invisibly) containing the keys associated with the values
+  loaded into the environment.
 }
 
 \author{Roger D. Peng}
 
 \seealso{
-  \code{\link{dbUtils}} and \code{\link{filehash-class}}
+  \code{\link{dbInit}} and \code{\link{filehash-class}}
 }
 
 \examples{
@@ -54,6 +68,11 @@ mean(env$a)
 
 env$b[1:5] <- 5:1
 print(env$b)
+
+env <- new.env()
+dbLoad(db, env)
+ls(env)
 }
 
 \keyword{database}
+\keyword{methods}

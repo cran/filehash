@@ -1,6 +1,7 @@
 
 R : Copyright 2005, The R Foundation for Statistical Computing
-Version 2.1.1  (2005-06-20), ISBN 3-900051-07-0
+Version 2.2.0  (2005-10-06 r35749)
+ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -15,8 +16,10 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(filehash)
-Simple file-based hash table (version 0.2-1)
+Simple file-based hash table (version 0.3-2)
 > 
+> ######################################################################
+> ## Test 'filehashDB' class
 > ## Create a simple database
 > 
 > dbCreate("mydb")
@@ -74,6 +77,62 @@ Simple file-based hash table (version 0.2-1)
  num [1:1000] 0.0854 0.3317 0.5647 0.4989 0.4549 ...
 > env$other
 [1] "hello"
+> 
+> env$b <- rnorm(100)
+> mean(env$b)
+[1] -0.02208835
+> 
+> env$a[1:5] <- 5:1
+> print(env$a)
+ [1]  5  4  3  2  1  6  7  8  9 10
+> 
+> dbDelete(db, "c")
+[1] TRUE
+> 
+> tryCatch(print(env$c), error = function(e) print(e))
+<simpleError in dbFetch(db, key): ‘c’ does not exist>
+> tryCatch(dbFetch(db, "c"), error = function(e) print(e))
+<simpleError in dbFetch(db, "c"): ‘c’ does not exist>
+> 
+> ######################################################################
+> ## Test 'filehashRDS' class
+> 
+> dbCreate("mydbRDS", "RDS")
+> db <- dbInitialize("mydbRDS", "RDS")
+> show(db)
+“filehash” database ‘mydbRDS’ 
+> 
+> ## Put some data into it
+> set.seed(1000)
+> dbInsert(db, "a", 1:10)
+[1] TRUE
+> dbInsert(db, "b", rnorm(100))
+[1] TRUE
+> dbInsert(db, "c", 100:1)
+[1] TRUE
+> dbInsert(db, "d", runif(1000))
+[1] TRUE
+> dbInsert(db, "other", "hello")
+[1] TRUE
+> 
+> dbList(db)
+[1] "a"     "b"     "c"     "d"     "other"
+> 
+> dbExists(db, "e")
+[1] FALSE
+> dbExists(db, "a")
+[1] TRUE
+> 
+> env <- db2env(db)
+> ls(env)
+[1] "a"     "b"     "c"     "d"     "other"
+> 
+> env$a
+> env$b
+> env$c
+> str(env$d)
+ num [1:1000] 0.0854 0.3317 0.5647 0.4989 0.4549 ...
+> env$other
 > 
 > env$b <- rnorm(100)
 > mean(env$b)
