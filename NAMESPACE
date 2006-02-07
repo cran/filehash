@@ -1,8 +1,8 @@
-import(methods)
-
 exportClasses("filehash", "filehashDB", "filehashRDS")
 
 exportMethods("dbInsert", "dbFetch", "dbExists", "dbList", "dbDelete",
-              "dbReorganize", "db2env", "dbLoad", "show")
+              "dbReorganize", "dbUnlink")
+exportMethods("show", "with")
 
-export("dbCreate", "dbInitialize")
+export("dumpDF", "dumpObjects", "dbCreate", "dbInitialize", "dbLoad",
+       "db2env", "dumpImage", "filehashOption")

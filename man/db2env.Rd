@@ -1,26 +1,22 @@
 \name{dbLoad}
-\alias{db2env}
-\alias{db2env,filehash-method}
 \alias{dbLoad}
-\alias{dbLoad,filehash,environment-method}
+\alias{db2env}
 
 \title{Load database into environment}
 \description{
   Load entire database into an environment
 }
 \usage{
-db2env(db, ...)
-dbLoad(db, env, ...)
+db2env(db)
+dbLoad(db, env = parent.frame(), keys = NULL)
 }
 \arguments{
   \item{db}{database object}
   \item{env}{an environment}
+  \item{keys}{character vector of database keys to load}
   \item{...}{other arguments passed to methods}
 }
 \details{
-  \code{db2env} and \code{dbLoad} are generics, but there are methods
-  for objects of class \code{"filehash"}.
-  
   \code{db2env} loads the entire database \code{db} into an environment
   via calls to \code{makeActiveBinding}.  Therefore, the data themselves
   are not stored in the environment, but a function pointing to the data
@@ -32,7 +28,7 @@ dbLoad(db, env, ...)
   \code{dbLoad}  loads objects in the database directly into the
   environment specified (like \code{load} does).  \code{dbLoad} takes a
   second argument \code{env}, which is an environment, and the default for
-  \code{env} is \code{parent.frame(n = 2)}. 
+  \code{env} is \code{parent.frame()}. 
 
   The use of \code{makeActiveBinding} in \code{db2env} and \code{dbLoad}
   allows for potentially large databases to, at least conceptually, be
@@ -50,7 +46,7 @@ dbLoad(db, env, ...)
 \author{Roger D. Peng}
 
 \seealso{
-  \code{\link{dbInit}} and \code{\link{filehash-class}}
+  \code{\link{dbInitialize}} and \code{\link{filehash-class}}
 }
 
 \examples{
@@ -75,4 +71,3 @@ ls(env)
 }
 
 \keyword{database}
-\keyword{methods}

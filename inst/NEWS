@@ -1,0 +1,18 @@
+Version 0.4
+-----------
+
+* Added name mangling scheme to prevent clobbering on case-insensitive
+OSes like Windows (thanks to Bill Venables and David Brahm)
+
+* Added dumpImage, dumpObjects, dumpDF functions for dumping various
+things to filehash databases
+
+* Added filehashOption() function for setting global options; right
+now only the default database type can be set
+
+* dbLoad and db2env are regular functions now rather than
+generics/methods.  dbLoad's default 'env' is the parent frame now
+
+* Added a "filehash" method for 'with'
+
+* Added new generic dbUnlink which deletes a database from the disk

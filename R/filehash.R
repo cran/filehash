@@ -87,17 +87,26 @@ setValidity("filehashRDS",
                 TRUE
             })
 
+
+mangleName <- function(oname) {
+    gsub("([A-Z])", "@\\1", oname, perl = TRUE)
+}
+
+unMangleName <- function(mname) {
+    gsub("@", "", mname, fixed = TRUE)
+}
+
 setGeneric("objectFile", function(db, key) standardGeneric("objectFile"))
 setMethod("objectFile", signature(db = "filehashRDS", key = "character"),
           function(db, key) {
-              file.path(db@dbDir, key)
+              file.path(db@dbDir, mangleName(key))
           })
 
 ######################################################################
 ## Class 'filehashHTTP'
 
 ## setClass("filehashHTTP",
-##          representation(remoteURL = "character", localDB = "filehashRDS"),
+##          representation(remoteURL = "character", local = "filehashRDS"),
 ##          contains = "filehash")
 ## 
 ## setMethod("objectFile", signature(db = "filehashHTTP", key = "character"),
@@ -107,32 +116,77 @@ setMethod("objectFile", signature(db = "filehashRDS", key = "character"),
 
 ######################################################################
 
-dbCreate <- function(dbName, type = c("DB", "RDS")) {
-    type <- match.arg(type)
+touchFile <- function(name) {
+    con <- file(name, "wb")
+    close(con)
+}
 
-    switch(type, DB = {
-        map <- new.env(hash = TRUE, parent = NULL)
-        mapfile <- generateMapFile(dbName)
-        datafile <- generateDataFile(dbName)
-    
-        if(file.exists(mapfile))
-            warning("overwriting existing file ", sQuote(mapfile),
-                    " with index file")
-        .saveRDS(map, file = mapfile, compress = TRUE)
-        if(file.exists(datafile))
-            warning("overwriting existing file ", sQuote(datafile),
-                    " with data file")
-        con <- file(datafile, "wb")
-        close(con)
-        TRUE
-    }, RDS = {
-        dbDir <- dbName
-        dir.create(dbDir)
+## Create necessary database files.  On successful creation, return
+## TRUE.  If the database already exists, don't do anything but return
+## TRUE.  If there's any other strange condition, return FALSE.
+
+dbCreate <- function(dbName, type = c("DB", "RDS")) {
+    type <- if(missing(type))
+        filehashOption()$defaultType
+    else
+        match.arg(type)
+
+    tryCatch({
+        switch(type, DB = {
+            mapfile <- generateMapFile(dbName)
+            datafile <- generateDataFile(dbName)
+            
+            ## Database doesn't already exist
+            if(!any(file.exists(c(mapfile, datafile)))) {
+                map <- new.env(hash = TRUE, parent = NULL)
+                .saveRDS(map, file = mapfile, compress = TRUE)
+                touchFile(datafile)
+            }
+            else
+                message("database ", sQuote(dbName), " already exists")
+            TRUE
+        }, RDS = {
+            dbDir <- dbName
+            
+            if(!file.exists(dbDir))
+                dir.create(dbDir)
+            else
+                message("database ", sQuote(dbName), " already exists")
+            TRUE
+        })
+    }, error = function(cond) {
+        cat(as.character(cond))
+        FALSE
     })
 }
 
+
+env2list <- function(env) {
+    mget(ls(env, all = TRUE), env)
+}
+
+## Set options and retrieve list of options
+
+filehashOption <- function(...) {
+    args <- list(...)
+    n <- names(args)
+
+    for(n in names(args)) 
+        assign(n, args[[n]], .filehashOptions)
+    current <- env2list(.filehashOptions)
+
+    if(length(args) == 0)
+        current
+    else
+        invisible(current)
+}
+
 dbInitialize <- function(dbName, type = c("DB", "RDS")) {
-    type <- match.arg(type)
+    type <- if(missing(type)) 
+        filehashOption()$defaultType
+    else
+        match.arg(type)
+    
     switch(type, DB = {
         new("filehashDB", datafile = generateDataFile(dbName),
             mapfile = generateMapFile(dbName), name = basename(dbName))
@@ -141,8 +195,61 @@ dbInitialize <- function(dbName, type = c("DB", "RDS")) {
     })
 }
 
-setGeneric("db2env", function(db, ...) standardGeneric("db2env"))
-setGeneric("dbLoad", function(db, env, ...) standardGeneric("dbLoad"))
+## Load active bindings into an environment
+
+dbLoad <- function(db, env = parent.frame(), keys = NULL) {
+    if(is.character(db))
+        db <- dbInitialize(db)  ## use the default DB type
+    if(is.null(keys))
+        keys <- dbList(db)
+    active <- sapply(keys, function(k) {
+        exists(k, env, inherits = FALSE)
+    })
+    if(any(active)) {
+        warning("keys with active/regular bindings ignored: ",
+                paste(sQuote(keys[active]), collapse = ", "))
+        keys <- keys[!active]
+    }                      
+    make.f <- function(k) {
+        key <- k
+        function(value) {
+            if(!missing(value)) {
+                dbInsert(db, key, value)
+                invisible(value)
+            }
+            else {
+                obj <- dbFetch(db, key)
+                obj
+            }
+        }
+    }
+    for(k in keys) 
+        makeActiveBinding(k, make.f(k), env)
+    invisible(keys)
+}
+
+## Load active bindings into an environment and return the environment
+
+db2env <- function(db) {
+    if(is.character(db))
+        db <- dbInitialize(db)  ## use the default DB type
+    env <- new.env(hash = TRUE)
+    dbLoad(db, env)
+    env
+}
+
+######################################################################
+## Other methods
+
+setGeneric("with")
+setMethod("with", "filehash",
+          function(data, expr, ...) {
+              env <- db2env(data)
+              eval(substitute(expr), env, enclos = parent.frame())
+          })
+
+######################################################################
+## Database interface
 
 setGeneric("dbInsert", function(db, key, value) standardGeneric("dbInsert"))
 setGeneric("dbFetch", function(db, key) standardGeneric("dbFetch"))
@@ -150,48 +257,10 @@ setGeneric("dbExists", function(db, key) standardGeneric("dbExists"))
 setGeneric("dbList", function(db) standardGeneric("dbList"))
 setGeneric("dbDelete", function(db, key) standardGeneric("dbDelete"))
 setGeneric("dbReorganize", function(db) standardGeneric("dbReorganize"))
+setGeneric("dbUnlink", function(db) standardGeneric("dbUnlink"))
 
 ######################################################################
-
-setMethod("dbLoad", signature(db = "filehash", env = "environment"),
-          function(db, env = parent.frame(n = 2), ...) {
-              keys <- dbList(db)
-
-              make.f <- function(k) {
-                  key <- k
-                  function(value) {
-                      if(!missing(value))
-                          dbInsert(db, key, value)
-                      else
-                          dbFetch(db, key)
-                  }
-              }
-              for(k in keys) 
-                  makeActiveBinding(k, make.f(k), env)
-              invisible(keys)
-          })
-
-setMethod("db2env", "filehash",
-          function(db, ...) {
-              env <- new.env(hash = TRUE)
-              keys <- dbList(db)
-
-              make.f <- function(k) {
-                  key <- k
-                  function(value) {
-                      if(!missing(value))
-                          dbInsert(db, key, value)
-                      else
-                          dbFetch(db, key)
-                  }
-              }
-              for(k in keys) 
-                  makeActiveBinding(k, make.f(k), env)
-              env
-          })
-
-
-######################################################################
+## Interface methods
 
 setMethod("dbInsert",
           signature(db = "filehashDB", key = "character", value = "ANY"),
@@ -270,20 +339,21 @@ setMethod("dbExists", signature(db = "filehashDB", key = "character"),
 setMethod("dbExists", signature(db = "filehashRDS", key = "character"),
           function(db, key) {
               fileList <- dir(db@dbDir, all.files = TRUE)
-              key %in% fileList
+              key %in% unMangleName(fileList)
           })
 
 setMethod("dbList", "filehashDB",
           function(db) {
               map <- getMap(db)
-              ls(map)
+              ls(map, all.names = TRUE)
           }
           )
 
 setMethod("dbList", "filehashRDS",
           function(db) {
               fileList <- dir(db@dbDir, all.files = TRUE)
-              fileList[-match(c(".", ".."), fileList)]
+              fileList <- fileList[-match(c(".", ".."), fileList)]
+              unMangleName(fileList)
           })
 
 setMethod("dbDelete", signature(db = "filehashDB", key = "character"),
@@ -335,5 +405,36 @@ setMethod("dbReorganize", "filehashDB",
               rval
           }
           )
+
+setMethod("dbUnlink", "filehashDB",
+          function(db) {
+              mapfile <- generateMapFile(dbName(db))
+              datafile <- generateDataFile(dbName(db))
+
+              tryCatch({
+                  unlink(mapfile)
+                  unlink(datafile)
+                  TRUE
+              }, error = function(cond) {
+                  cat(as.character(cond))
+                  FALSE
+              })
+          })
+
+setMethod("dbUnlink", "filehashRDS",
+          function(db) {
+              d <- db@dbDir
+
+              tryCatch({
+                  unlink(d, recursive = TRUE)
+                  TRUE
+              }, error = function(cond) {
+                  cat(as.character(cond))
+                  FALSE
+              })
+          })
+
+
+######################################################################
 
 

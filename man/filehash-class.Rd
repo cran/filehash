@@ -9,20 +9,22 @@
 \alias{dbList}
 \alias{dbDelete}
 \alias{dbReorganize}
+\alias{dbUnlink}
 \alias{dbDelete,filehashDB,character-method}
 \alias{dbExists,filehashDB,character-method}
 \alias{dbFetch,filehashDB,character-method}
 \alias{dbInsert,filehashDB,character-method}
 \alias{dbList,filehashDB-method}
+\alias{dbUnlink,filehashDB-method}
 \alias{dbReorganize,filehashDB-method}
 \alias{dbDelete,filehashRDS,character-method}
 \alias{dbExists,filehashRDS,character-method}
 \alias{dbFetch,filehashRDS,character-method}
 \alias{dbInsert,filehashRDS,character-method}
 \alias{dbList,filehashRDS-method}
+\alias{dbUnlink,filehashRDS-method}
 \alias{show,filehash-method}
-
-%%\alias{db2env,filehash-method}
+\alias{with,filehash-method}
 
 \title{Class "filehash"}
 
@@ -85,10 +87,10 @@
       the old copy.  This function has not been tested much and so
       should be considered \emph{experimental}.  \code{dbReorganize} is
       not needed when using the \code{"RDS"} format.}
-    \item{db2env}{\code{signature(db = "filehash")}: loads
-      \code{"filehash"} database into an environment via calls to
-      \code{makeActiveBinding}}
+    \item{dbUnlink}{delete an entire database from the disk}
     \item{show}{print method}
+    \item{with}{allows \code{with} to be used with \code{"filehash"}
+      objects much like it can be used with lists or data frames}  
   }
 }
 
@@ -104,5 +106,7 @@ dbExists(db, "b")  ## 'TRUE'
 dbList(db)  ## c("a", "b")
 dbDelete(db, "a")
 dbList(db) ## "a"
+
+with(db, mean(b))
 }
 \keyword{classes}
