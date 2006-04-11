@@ -41,19 +41,29 @@ generateDataFile <- function(dbName) {
 }
 
 readData <- function(con, start, len) {
-    stopifnot(isOpen(con))
-    stopifnot(isSeekable(con))
+    if(!isOpen(con)) 
+        stop("connection is not open")
+    if(!isSeekable(con))
+        stop("cannot seek on connection")
     seek(con, start)
     data <- readBin(con, "raw", len)
-    unserialize(rawToChar(data))
+
+    if(getRversion() < package_version("2.4.0"))
+        unserialize(rawToChar(data))
+    else
+        unserialize(data)
 }
 
 appendData <- function(con, data) {
-    stopifnot(isOpen(con))
-    stopifnot(isSeekable(con))
-
+    if(!isOpen(con)) 
+        stop("connection is not open")
+    if(!isSeekable(con))
+        stop("cannot seek on connection")
     start <- getEndPos(con)
-    byteData <- charToRaw(serialize(data, NULL, ascii = TRUE))
+    byteData <- if(getRversion() < package_version("2.4.0"))
+        charToRaw(serialize(data, NULL))
+    else
+        serialize(data, NULL)
     writeBin(byteData, con)
 
     c(start, length(byteData))
@@ -138,7 +148,7 @@ dbCreate <- function(dbName, type = c("DB", "RDS")) {
             
             ## Database doesn't already exist
             if(!any(file.exists(c(mapfile, datafile)))) {
-                map <- new.env(hash = TRUE, parent = NULL)
+                map <- new.env(hash = TRUE, parent = emptyenv())
                 .saveRDS(map, file = mapfile, compress = TRUE)
                 touchFile(datafile)
             }
@@ -321,7 +331,8 @@ setMethod("dbFetch", signature(db = "filehashRDS", key = "character"),
               if(!file.exists(ofile))
                   stop("value associated with ", sQuote(key), " is not in database")
               tryCatch({
-                  .readRDS(file = ofile)
+                  r <- .readRDS(file = ofile)
+                  r
               }, error = function(cond) {
                   cat("error reading value associated with ", sQuote(key), ": ",
                       as.character(cond), "\n", sep = "")

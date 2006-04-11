@@ -1,3 +1,10 @@
+Version 0.4-1
+-------------
+
+* Patch release, changed some internals for the "DB" type databases
+
+* Added test database for regression testing in future releases
+
 Version 0.4
 -----------
 
