@@ -2,6 +2,7 @@
 \alias{dumpObjects}
 \alias{dumpImage}
 \alias{dumpDF}
+\alias{dumpList}
 
 \title{Dump objects of database}
 \description{
@@ -11,6 +12,7 @@
 dumpObjects(..., list = character(0), dbName, envir = parent.frame())
 dumpImage(dbName = "Rworkspace")
 dumpDF(data, dbName = NULL)
+dumpList(data, dbName = NULL)
 }
 
 \arguments{
@@ -18,10 +20,11 @@ dumpDF(data, dbName = NULL)
   \item{list}{character vector of names of objects to dump}
   \item{dbName}{character, name of database to which objects should be dumped}
   \item{envir}{environment from which to obtain objects}
-  \item{data}{a data frame}
+  \item{data}{a data frame or a list}
 }
 \details{
-  Objects dumped to a database can later be loaded via \code{dbLoad}.
+  Objects dumped to a database can later be loaded via \code{dbLoad} or
+  can be accessed with \code{dbFetch}, \code{dbList}, etc.
   Alternatively, the \code{with} method can be used to evaluate code in
   the context of a database.  If a database with name \code{dbName}
   already exists, objects will be inserted into the existing database
@@ -30,10 +33,13 @@ dumpDF(data, dbName = NULL)
   \code{dumpDF} is different in that each variable in the data frame is
   stored as a separate object in the database.  So each variable can be
   read from the database separately rather than having to load the
-  entire data frame into memory.
+  entire data frame into memory.  \code{dumpList} works in a simlar
+  way.
 }
+
 \value{
-  An object of class \code{"filehash"} is returned.
+  An object of class \code{"filehash"} is returned and a database is
+  created.
 }
 
 \author{Roger D. Peng}
@@ -43,6 +49,9 @@ data <- data.frame(y = rnorm(100), x = rnorm(100), z = rnorm(100))
 db <- dumpDF(data, dbName = "dataframe.dump")
 fit <- with(db, lm(y ~ x + z))
 summary(fit)
+
+db <- dumpList(list(a = 1, b = 2, c = 3), "list.dump")
+db$a
 }
 \keyword{database}% at least one, from doc/KEYWORDS
 

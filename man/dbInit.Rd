@@ -8,14 +8,14 @@
   Interface for a simple file-based hash table
 }
 \usage{
-dbCreate(dbName, type = c("DB", "RDS"))
-dbInitialize(dbName, type = c("DB", "RDS"))
+dbCreate(dbName, type)
+dbInitialize(dbName, type)
 }
 
 \arguments{
   \item{dbName}{character, name of database}
   \item{type}{type of database format.  If missing, the default type
-    will be used.}
+    will be used}
 }
 
 \details{
@@ -25,16 +25,15 @@ dbInitialize(dbName, type = c("DB", "RDS"))
   \code{dbInitialize} takes a database name and returns an object
   inheriting from class \code{"filehash"}.
 
-  The \code{type} argument specifies how the database should be stored
-  on the disk, either as a pair of files (\code{"DB"}) or as a
-    made to automatically determine the typecollection of
-  files in a directory (\code{"RDS"}).  If not specified, the default
+  The \code{type} argument specifies the format in which the database
+  should be stored on the disk.  If not specified, the default
   type will be used (as specified by \code{filehashOption}).  
 }
 
 \value{
   \code{dbCreate} returns \code{TRUE} upon success and \code{FALSE} in
-  the event of an error.
+  the event of an error.  \code{dbInitialize} returns an object
+  inheriting from class \code{"filehash"}
 }
 
 \author{Roger D. Peng}

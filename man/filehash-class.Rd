@@ -3,13 +3,16 @@
 \alias{filehash-class}
 \alias{filehashDB-class}
 \alias{filehashRDS-class}
+\alias{filehashDB1-class}
 \alias{dbFetch}
+\alias{dbMultiFetch}
 \alias{dbInsert}
 \alias{dbExists}
 \alias{dbList}
 \alias{dbDelete}
 \alias{dbReorganize}
 \alias{dbUnlink}
+\alias{dbDisconnect}
 \alias{dbDelete,filehashDB,character-method}
 \alias{dbExists,filehashDB,character-method}
 \alias{dbFetch,filehashDB,character-method}
@@ -17,6 +20,16 @@
 \alias{dbList,filehashDB-method}
 \alias{dbUnlink,filehashDB-method}
 \alias{dbReorganize,filehashDB-method}
+\alias{dbMultiFetch,filehashDB1-method}
+\alias{dbDelete,filehashDB1,character-method}
+\alias{dbExists,filehashDB1,character-method}
+\alias{dbFetch,filehashDB1,character-method}
+\alias{dbMultiFetch,filehashDB1,character-method}
+\alias{dbInsert,filehashDB1,character-method}
+\alias{dbList,filehashDB1-method}
+\alias{dbUnlink,filehashDB1-method}
+\alias{dbDisconnect,filehashDB1-method}
+\alias{dbReorganize,filehashDB1-method}
 \alias{dbDelete,filehashRDS,character-method}
 \alias{dbExists,filehashRDS,character-method}
 \alias{dbFetch,filehashRDS,character-method}
@@ -25,12 +38,27 @@
 \alias{dbUnlink,filehashRDS-method}
 \alias{show,filehash-method}
 \alias{with,filehash-method}
+\alias{coerce,filehashDB,filehashRDS-method}
+\alias{coerce,filehashRDS,filehashDB-method}
+\alias{coerce,filehashDB1,filehashRDS-method}
+\alias{coerce,filehashDB1,list-method}
+\alias{coerce,filehashDB,filehashDB1-method}
+\alias{lapply,filehash-method}
+
+\alias{[,filehash,ANY,ANY,missing-method}
+\alias{[,filehashDB1,character,missing,missing-method}
+\alias{[[,filehash,character,missing-method}
+\alias{[[,filehash,numeric,missing-method}
+\alias{[[<-,filehash,character,missing-method}
+\alias{[[<-,filehash,numeric,missing-method}
+\alias{$<-,filehash,character-method}
+\alias{$,filehash,character-method}
 
 \title{Class "filehash"}
 
 \description{
-  These functions form the interface for a simple file-based hash
-  table.
+  These functions form the interface for a simple file-based key-value
+  database (i.e. hash table).
 }
 
 \section{Objects from the Class}{
@@ -59,10 +87,18 @@
   }
 }
 
+\section{Additional slots for "filehashDB1"}{
+  \describe{
+    \item{\code{datafile}:}{full path to the database file.}
+    \item{\code{readcon}:}{"read" connection to the database file.}
+    \item{\code{appendcon}:}{"append" connection to the database file.}
+    \item{\code{meta}:}{list for database metadata.}
+  }
+}
+
 \section{Methods}{
   \describe{
-    \item{dbDelete}{\code{signature(db = "filehash", key =
-	"character")}: The \code{dbDelete} function is for deleting
+    \item{dbDelete}{The \code{dbDelete} function is for deleting
       elements, but for the \code{"DB"} format all it does is remove the
       key from the lookup table. 
       The actual data are still in the database (but inaccessible).  If
@@ -71,33 +107,39 @@
       have multiple copies of data lying around after a while,
       potentially making the database file big.  The \code{"RDS"} format
       does not have this problem.}
-    \item{dbExists}{\code{signature(db = "filehash", key =
-	"character")}: check to see if a key exists.}
-    \item{dbFetch}{\code{signature(db = "filehash", key = "character")}:
-      retrieve the value associated with a given key.}
-    \item{dbInsert}{\code{signature(db = "filehash", key =
-	"character")}: insert a key-value pair into the database.  If
+    \item{dbExists}{check to see if a key exists.}
+    \item{dbFetch}{retrieve the value associated with a given key.}
+    \item{dbMultiFetch}{retrieve values associated with multiple keys (a
+      list of those values is returned).}
+    \item{dbInsert}{insert a key-value pair into the database.  If
       that key already exists, its associated value is overwritten.}
-    \item{dbList}{\code{signature(db = "filehash")}: list all keys in
-      the database.}
-    \item{dbReorganize}{\code{signature(db = "filehashDB")}: The
-      \code{dbReorganize} function is there for the purpose of rewriting
-      the database to remove all of the stale entries.  Basically, this
-      function creates a new copy of the database and then overwrites
-      the old copy.  This function has not been tested much and so
-      should be considered \emph{experimental}.  \code{dbReorganize} is
-      not needed when using the \code{"RDS"} format.}
+    \item{dbList}{list all keys in the database.}
+    \item{dbReorganize}{The \code{dbReorganize} function is there for
+      the purpose of rewriting the database to remove all of the stale
+      entries.  Basically, this function creates a new copy of the
+      database and then overwrites the old copy.  This function has not
+      been tested extensively and so should be considered
+      \emph{experimental}.  \code{dbReorganize} is not needed when using
+      the \code{"RDS"} format.}
     \item{dbUnlink}{delete an entire database from the disk}
+    \item{dbDisconnect}{close any open connections associated with a
+      database object.}
     \item{show}{print method}
     \item{with}{allows \code{with} to be used with \code{"filehash"}
-      objects much like it can be used with lists or data frames}  
+      objects much like it can be used with lists or data frames}
+    \item{[[,[[<-}{elements of a database can be accessed using the \code{[[}
+      operator much like a list or environment, but only character
+      indices are allowed}
+    \item{$,$<-}{elements of a database can be accessed using the \code{$}
+      operator much like with a list or environment}
+    \item{lapply}{works much like \code{lapply} with lists; a list is returned.}
   }
 }
 
 \author{Roger D. Peng \email{rpeng@jhsph.edu}}
 
 \examples{
-dbCreate("myDB")  ## Create files 'myDB.idx' and 'myDB.rdb'
+dbCreate("myDB")  ## Create database 'myDB'
 db <- dbInitialize("myDB")
 dbInsert(db, "a", 1:10)
 dbInsert(db, "b", rnorm(1000))
@@ -105,7 +147,7 @@ dbExists(db, "b")  ## 'TRUE'
 
 dbList(db)  ## c("a", "b")
 dbDelete(db, "a")
-dbList(db) ## "a"
+dbList(db) ## "b"
 
 with(db, mean(b))
 }

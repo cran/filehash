@@ -1,9 +1,27 @@
+Version 0.5-2
+-------------
+
+* Added methods for "[[", "$", "[[<-", and "$<-" for filehash objects.
+Only character indices are allowed
+
+* filehash-DB functions use the new serialize() from R 2.4.0 so that
+numeric data will not suffer from rounding error due to previous use
+of serialize(ascii = TRUE).
+
+* New format filehash-DB1 which stores the key index/map and data in a
+  single file.
+
+* New "filehash" method for lapply so that functions can be applied to
+  database entries.
+
+
 Version 0.4-1
 -------------
 
 * Patch release, changed some internals for the "DB" type databases
 
 * Added test database for regression testing in future releases
+
 
 Version 0.4
 -----------
