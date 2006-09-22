@@ -3,7 +3,7 @@ toDBType <- function(from, type, dbpath = NULL) {
         dbpath <- dbName(from)
     if(!dbCreate(dbpath, type = type))
         stop("could not create ", type, " database")
-    db <- dbInitialize(dbpath, type = type)
+    db <- dbInit(dbpath, type = type)
     keys <- dbList(from)
     
     for(key in keys)

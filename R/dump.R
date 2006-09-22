@@ -6,9 +6,9 @@ dumpImage <- function(dbName = "Rworkspace") {
 dumpObjects <- function(..., list = character(0), dbName, envir = parent.frame()) {
     names <- as.character(substitute(list(...)))[-1]
     list <- c(list, names)
-    if(!dbCreate(dbName, "DB1"))
+    if(!dbCreate(dbName))
         stop("could not create database file")
-    db <- dbInitialize(dbName, filehashOption()$defaultType)
+    db <- dbInit(dbName)
 
     for(i in seq(along = list)) 
         dbInsert(db, list[i], get(list[i], envir))
@@ -30,11 +30,10 @@ dumpList <- function(data, dbName = NULL) {
         stop("list must have non-empty names")
     if(is.null(dbName))
         dbName <- as.character(substitute(data))
-    type <- filehashOption()$defaultType
     
-    if(!dbCreate(dbName, type))
+    if(!dbCreate(dbName))
         stop("could not create database file")
-    db <- dbInitialize(dbName, type)
+    db <- dbInit(dbName)
 
     for(i in seq(along = vnames))
         dbInsert(db, vnames[i], data[[vnames[i]]])

@@ -1,18 +1,38 @@
-Version 0.5-2
+Version 0.8
+-----------
+
+* Added function dbLazyLoad for lazy loading filehash databases.
+
+* dbCreate and dbInit are now generics with a method for character
+vectors.  The behavior should be the same as before, by default.
+
+* dbLoad is generic.
+
+* The second argument to dbMultiFetch is 'key', not 'keys'.
+
+* dbInitialize is deprecated
+
+* 'DB1' and 'RDS' formats use normalizePath() for resolving paths to
+directories
+
+* There is a vignette now [via vignette("filehash")]
+
+
+Version 0.6-3
 -------------
 
-* Added methods for "[[", "$", "[[<-", and "$<-" for filehash objects.
-Only character indices are allowed
+* Added methods for "[[", "$", "[[<-", and "$<-" for filehash
+objects. Only character indices are allowed
 
 * filehash-DB functions use the new serialize() from R 2.4.0 so that
 numeric data will not suffer from rounding error due to previous use
 of serialize(ascii = TRUE).
 
 * New format filehash-DB1 which stores the key index/map and data in a
-  single file.
+single file.
 
 * New "filehash" method for lapply so that functions can be applied to
-  database entries.
+database entries.
 
 
 Version 0.4-1

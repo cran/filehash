@@ -219,7 +219,7 @@ setMethod("dbReorganize", "filehashDB",
               
               if(!dbCreate(tempdbName, type = "DB"))
                   return(FALSE)
-              tempdb <- dbInitialize(tempdbName, type = "DB")
+              tempdb <- dbInit(tempdbName, type = "DB")
               
               for(key in dbList(db)) 
                   dbInsert(tempdb, key, dbFetch(db, key))

@@ -1,6 +1,6 @@
 
-R : Copyright 2006, The R Foundation for Statistical Computing
-Version 2.3.1 (2006-06-01)
+R version 2.4.0 beta (2006-09-21 r39451)
+Copyright (C) 2006 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -16,7 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(filehash)
-Simple key-value database (version 0.6-3)
+Simple key-value database (version 0.8 2006-09-22)
 > 
 > ######################################################################
 > ## Test 'filehashDB' class
@@ -24,7 +24,7 @@ Simple key-value database (version 0.6-3)
 > 
 > dbCreate("mydb", "DB")
 [1] TRUE
-> db <- dbInitialize("mydb", "DB")
+> db <- dbInit("mydb", "DB")
 > 
 > ## Put some data into it
 > set.seed(1000)
@@ -106,9 +106,9 @@ Simple key-value database (version 0.6-3)
 > 
 > dbCreate("mydbRDS", "RDS")
 [1] TRUE
-> db <- dbInitialize("mydbRDS", "RDS")
+> db <- dbInit("mydbRDS", "RDS")
 > show(db)
-'filehash' database ‘mydbRDS’ 
+'filehashRDS' database 'mydbRDS'
 > 
 > ## Put some data into it
 > set.seed(1000)
@@ -179,9 +179,13 @@ Simple key-value database (version 0.6-3)
 [1] TRUE
 > 
 > tryCatch(print(env$c), error = function(e) print(e))
-<simpleError in dbFetch(db, key): ‘c’ not in database>
+<simpleError in dbFetch(db, key): error obtaining value for key 'c': unable to open connection>
+Warning message:
+cannot open compressed file '/home/rpeng/projects/R-packages/filehash.Rcheck/tests/mydbRDS/c' 
 > tryCatch(dbFetch(db, "c"), error = function(e) print(e))
-<simpleError in dbFetch(db, "c"): ‘c’ not in database>
+<simpleError in dbFetch(db, "c"): error obtaining value for key 'c': unable to open connection>
+Warning message:
+cannot open compressed file '/home/rpeng/projects/R-packages/filehash.Rcheck/tests/mydbRDS/c' 
 > 
 > 
 > ######################################################################
@@ -189,7 +193,7 @@ Simple key-value database (version 0.6-3)
 > 
 > dbCreate("mydb", "DB1")
 [1] TRUE
-> db <- dbInitialize("mydb", "DB1")
+> db <- dbInit("mydb", "DB1")
 > 
 > ## Put some data into it
 > set.seed(1000)
@@ -255,9 +259,9 @@ Simple key-value database (version 0.6-3)
 [1] TRUE
 > 
 > tryCatch(print(env$c), error = function(e) print(e))
-<simpleError in readSingleKey(con, map, key): ‘c’ not in database>
+<simpleError in readSingleKey(con, map, key): 'c' not in database>
 > tryCatch(dbFetch(db, "c"), error = function(e) print(e))
-<simpleError in readSingleKey(con, map, key): ‘c’ not in database>
+<simpleError in readSingleKey(con, map, key): 'c' not in database>
 > 
 > numbers <- rnorm(100)
 > dbInsert(db, "numbers", numbers)

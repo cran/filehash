@@ -14,7 +14,7 @@ filehashOption(...)
 }
 \details{
   Currently, the only option that can be set is the default database
-  type (\code{defaultType}) which can be "DB" or "RDS". 
+  type (\code{defaultType}) which can be "DB1", "RDS" or "DB". 
 }
 \value{
   \code{filehashOptions} returns a list of current settings for all

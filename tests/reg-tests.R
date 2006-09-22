@@ -5,7 +5,7 @@ library(filehash)
 ## Create a simple database
 
 dbCreate("mydb", "DB")
-db <- dbInitialize("mydb", "DB")
+db <- dbInit("mydb", "DB")
 
 ## Put some data into it
 set.seed(1000)
@@ -47,7 +47,7 @@ stopifnot(identical(numbers, b))
 ## Test 'filehashRDS' class
 
 dbCreate("mydbRDS", "RDS")
-db <- dbInitialize("mydbRDS", "RDS")
+db <- dbInit("mydbRDS", "RDS")
 show(db)
 
 ## Put some data into it
@@ -88,7 +88,7 @@ tryCatch(dbFetch(db, "c"), error = function(e) print(e))
 ## test filehashDB1 class
 
 dbCreate("mydb", "DB1")
-db <- dbInitialize("mydb", "DB1")
+db <- dbInit("mydb", "DB1")
 
 ## Put some data into it
 set.seed(1000)

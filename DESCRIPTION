@@ -1,8 +1,8 @@
 Package:  filehash
-Version:  0.6-3
-Date:  2006-06-01
+Version:  0.8
+Date:  2006-09-22
 LazyLoad:  yes
-Depends:  R (>= 2.3.0), methods
+Depends:  R (>= 2.3.1), methods
 Collate:  filehash.R filehash-DB1.R filehash-DB.R filehash-RDS.R coerce.R dump.R zzz.R
 Title:  Simple key-value database
 Author:  Roger D. Peng <rpeng@jhsph.edu>
@@ -10,4 +10,4 @@ Maintainer:  Roger D. Peng <rpeng@jhsph.edu>
 Description:  Simple key-value database
 License:  GNU GPL (version 2 or later)
 URL:  http://sandybox.typepad.com/software/
-Packaged: Thu Jun  1 11:31:18 2006; rpeng
+Packaged: Fri Sep 22 10:51:06 2006; rpeng

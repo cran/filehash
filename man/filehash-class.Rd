@@ -140,7 +140,7 @@
 
 \examples{
 dbCreate("myDB")  ## Create database 'myDB'
-db <- dbInitialize("myDB")
+db <- dbInit("myDB")
 dbInsert(db, "a", 1:10)
 dbInsert(db, "b", rnorm(1000))
 dbExists(db, "b")  ## 'TRUE'

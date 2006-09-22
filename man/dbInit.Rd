@@ -1,28 +1,36 @@
 \name{dbInit}
 \alias{dbInit}
-\alias{dbCreate}
 \alias{dbInitialize}
+\alias{dbCreate}
+\alias{dbCreate,ANY-method}
+\alias{dbInit,ANY-method}
+
+%\alias{dbInitialize}
 
 \title{Simple file-based hash table}
 \description{
-  Interface for a simple file-based hash table
+  Interface for creating and initializing a simple file-based hash table
 }
 \usage{
-dbCreate(dbName, type)
-dbInitialize(dbName, type)
+dbCreate(db, ...)
+dbInit(db, ...)
+
+\S4method{dbCreate}{ANY}(db, type)
+\S4method{dbInit}{ANY}(db, type)
 }
 
 \arguments{
-  \item{dbName}{character, name of database}
+  \item{db}{character, name of database}
   \item{type}{type of database format.  If missing, the default type
     will be used}
+  \item{...}{other arguments passed to methods}
 }
 
 \details{
   \code{dbCreate} creates the necessary files or directory for the
   database.  If those files already exist nothing is done.
 
-  \code{dbInitialize} takes a database name and returns an object
+  \code{dbInit} takes a database name and returns an object
   inheriting from class \code{"filehash"}.
 
   The \code{type} argument specifies the format in which the database
@@ -30,9 +38,14 @@ dbInitialize(dbName, type)
   type will be used (as specified by \code{filehashOption}).  
 }
 
+\note{
+  The function \code{dbInitialize} has been deprecated.  Use
+  \code{dbInit} instead.
+}
+
 \value{
   \code{dbCreate} returns \code{TRUE} upon success and \code{FALSE} in
-  the event of an error.  \code{dbInitialize} returns an object
+  the event of an error.  \code{dbInit} returns an object
   inheriting from class \code{"filehash"}
 }
 

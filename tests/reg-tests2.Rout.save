@@ -1,6 +1,6 @@
 
-R : Copyright 2006, The R Foundation for Statistical Computing
-Version 2.3.1 (2006-06-01)
+R version 2.4.0 beta (2006-09-21 r39451)
+Copyright (C) 2006 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -16,7 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(filehash)
-Simple key-value database (version 0.6-3)
+Simple key-value database (version 0.8 2006-09-22)
 > 
 > ######################################################################
 > ## Test everything on all database formats
@@ -91,8 +91,8 @@ Simple key-value database (version 0.6-3)
 TESTING TYPE DB1 
 -----------------
 -----------------
-'filehash' database ‘mydbDB1’ 
-`data.frame':	2000 obs. of  3 variables:
+'filehashDB1' database 'mydbDB1'
+'data.frame':	2000 obs. of  3 variables:
  $ x: num  -0.151 -0.105  0.759 -1.243 -0.590 ...
  $ y: num   0.523  0.198 -1.162  1.067  1.275 ...
  $ z: num   1.616 -1.061  0.296 -0.315 -0.267 ...
@@ -455,31 +455,29 @@ List of 7
   .. ..- attr(*, "names")= chr [1:6] "Min." "1st Qu." "Median" "Mean" ...
  $ b    :Class 'table'  Named num [1:6] -2.3570 -0.6414  0.0420  0.0228  0.6593 ...
   .. ..- attr(*, "names")= chr [1:6] "Min." "1st Qu." "Median" "Mean" ...
- $ list : chr [1:100, 1:3] "1" "1" "1" "1" ...
+ $ list : 'table' chr [1:100, 1:3] "1" "1" "1" "1" ...
   ..- attr(*, "dimnames")=List of 2
   .. ..$ : NULL
   .. ..$ : chr [1:3] "Length" "Class" "Mode"
-  ..- attr(*, "class")= chr "table"
  $ other:Class 'table'  Named chr [1:3] "1" "character" "character"
   .. ..- attr(*, "names")= chr [1:3] "Length" "Class" "Mode"
  $ c    :Class 'table'  Named num [1:6]  1.0 25.8 50.5 50.5 75.2 ...
   .. ..- attr(*, "names")= chr [1:6] "Min." "1st Qu." "Median" "Mean" ...
  $ d    :Class 'table'  Named num [1:6] 0.000387 0.253300 0.506400 0.498500 0.749300 ...
   .. ..- attr(*, "names")= chr [1:6] "Min." "1st Qu." "Median" "Mean" ...
- $ dataf: chr [1:6, 1:3] "Min.   :-3.18310  " "1st Qu.:-0.67523  " "Median :-0.00818  " "Mean   :-0.00079  " ...
+ $ dataf: 'table' chr [1:6, 1:3] "Min.   :-3.18310  " "1st Qu.:-0.67523  " "Median :-0.00818  " "Mean   :-0.00079  " ...
   ..- attr(*, "dimnames")=List of 2
   .. ..$ : chr [1:6] "" "" "" "" ...
   .. ..$ : chr [1:3] "      x" "      y" "      z"
-  ..- attr(*, "class")= chr "table"
-<simpleError in readSingleKey(con, map, key): ‘c’ not in database>
-<simpleError in readSingleKey(con, map, key): ‘c’ not in database>
+<simpleError in readSingleKey(con, map, key): 'c' not in database>
+<simpleError in readSingleKey(con, map, key): 'c' not in database>
 -----------------
 -----------------
 TESTING TYPE DB 
 -----------------
 -----------------
-'filehash' database ‘mydbDB’ 
-`data.frame':	2000 obs. of  3 variables:
+'filehashDB' database 'mydbDB'
+'data.frame':	2000 obs. of  3 variables:
  $ x: num  -1.639 -0.287  0.254  1.052 -0.911 ...
  $ y: num   0.189  1.584 -1.001 -1.048  0.364 ...
  $ z: num   1.074 -1.852 -0.528 -0.093  0.739 ...
@@ -848,16 +846,14 @@ List of 7
   .. ..- attr(*, "names")= chr [1:6] "Min." "1st Qu." "Median" "Mean" ...
  $ other:Class 'table'  Named chr [1:3] "1" "character" "character"
   .. ..- attr(*, "names")= chr [1:3] "Length" "Class" "Mode"
- $ list : chr [1:100, 1:3] "1" "1" "1" "1" ...
+ $ list : 'table' chr [1:100, 1:3] "1" "1" "1" "1" ...
   ..- attr(*, "dimnames")=List of 2
   .. ..$ : NULL
   .. ..$ : chr [1:3] "Length" "Class" "Mode"
-  ..- attr(*, "class")= chr "table"
- $ dataf: chr [1:6, 1:3] "Min.   :-3.3974640  " "1st Qu.:-0.6794130  " "Median : 0.0065051  " "Mean   :-0.0008243  " ...
+ $ dataf: 'table' chr [1:6, 1:3] "Min.   :-3.3974640  " "1st Qu.:-0.6794130  " "Median : 0.0065051  " "Mean   :-0.0008243  " ...
   ..- attr(*, "dimnames")=List of 2
   .. ..$ : chr [1:6] "" "" "" "" ...
   .. ..$ : chr [1:3] "      x" "      y" "      z"
-  ..- attr(*, "class")= chr "table"
 <simpleError in dbFetch(db, key): ‘c’ not in database>
 <simpleError in dbFetch(db, "c"): ‘c’ not in database>
 -----------------
@@ -865,9 +861,9 @@ List of 7
 TESTING TYPE RDS 
 -----------------
 -----------------
-database ‘mydbRDS’ already exists
-'filehash' database ‘mydbRDS’ 
-`data.frame':	2000 obs. of  3 variables:
+database 'mydbRDS' already exists
+'filehashRDS' database 'mydbRDS'
+'data.frame':	2000 obs. of  3 variables:
  $ x: num  -1.027  0.859  0.717 -1.381 -1.410 ...
  $ y: num   0.781 -0.753  0.930 -0.660 -0.561 ...
  $ z: num  -0.669  0.896  0.369 -0.440  2.015 ...
@@ -1207,19 +1203,20 @@ List of 7
   .. ..- attr(*, "names")= chr [1:6] "Min." "1st Qu." "Median" "Mean" ...
  $ d    :Class 'table'  Named num [1:6] 0.00211 0.24620 0.48900 0.49850 0.74430 ...
   .. ..- attr(*, "names")= chr [1:6] "Min." "1st Qu." "Median" "Mean" ...
- $ dataf: chr [1:6, 1:3] "Min.   :-2.85622  " "1st Qu.:-0.72943  " "Median :-0.03520  " "Mean   :-0.04635  " ...
+ $ dataf: 'table' chr [1:6, 1:3] "Min.   :-2.85622  " "1st Qu.:-0.72943  " "Median :-0.03520  " "Mean   :-0.04635  " ...
   ..- attr(*, "dimnames")=List of 2
   .. ..$ : chr [1:6] "" "" "" "" ...
   .. ..$ : chr [1:3] "      x" "      y" "      z"
-  ..- attr(*, "class")= chr "table"
- $ list : chr [1:100, 1:3] "1" "1" "1" "1" ...
+ $ list : 'table' chr [1:100, 1:3] "1" "1" "1" "1" ...
   ..- attr(*, "dimnames")=List of 2
   .. ..$ : NULL
   .. ..$ : chr [1:3] "Length" "Class" "Mode"
-  ..- attr(*, "class")= chr "table"
  $ other:Class 'table'  Named chr [1:3] "1" "character" "character"
   .. ..- attr(*, "names")= chr [1:3] "Length" "Class" "Mode"
-<simpleError in dbFetch(db, key): ‘c’ not in database>
-<simpleError in dbFetch(db, "c"): ‘c’ not in database>
+<simpleError in dbFetch(db, key): error obtaining value for key 'c': unable to open connection>
+<simpleError in dbFetch(db, "c"): error obtaining value for key 'c': unable to open connection>
+Warning messages:
+1: cannot open compressed file '/home/rpeng/projects/R-packages/filehash.Rcheck/tests/mydbRDS/c' 
+2: cannot open compressed file '/home/rpeng/projects/R-packages/filehash.Rcheck/tests/mydbRDS/c' 
 > 
 > 

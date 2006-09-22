@@ -17,15 +17,17 @@ exportMethods(
               "dbReorganize",
               "dbUnlink",
               "dbMultiFetch",
-              "dbDisconnect"
+              "dbDisconnect",
+              "dbCreate",
+              "dbInit",
+              "dbLoad",
+              "dbLazyLoad"
               )
 
 exportMethods("[[", "[", "[[<-", "$<-", "$")
 
 export(
-       "dbCreate",
        "dbInitialize",
-       "dbInit",
        "convertDB",
        "filehashOption",
        "registerFormatDB",
@@ -44,7 +46,6 @@ exportMethods(
 export(
        "dumpDF",
        "dumpObjects",
-       "dbLoad",
        "db2env",
        "dumpImage",
        "dumpList"

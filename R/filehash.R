@@ -8,7 +8,8 @@ setMethod("dbName", "filehash", function(db) db@name)
 
 setMethod("show", "filehash",
           function(object) {
-              cat("'filehash' database", sQuote(object@name), "\n")
+              cat(gettextf("'%s' database '%s'\n", as.character(class(object)),
+                           object@name))
           })
 
 
@@ -56,30 +57,53 @@ dbStartup <- function(dbName, type, action = c("initialize", "create")) {
     validFormat <- type %in% names(filehashFormats())
     
     if(!validFormat) 
-        stop(sQuote(type), " not a valid database format")
+        stop(gettextf("'%s' not a valid database format", type))
     formatList <- filehashFormats()[[type]]
     doFUN <- formatList[[action]]
 
     if(!is.function(doFUN))
-        stop(sQuote(action), " function for database format ", sQuote(type),
-             " is not valid")
+        stop(gettextf("'%s' function for database format '%s' is not valid",
+                      action, type))
     doFUN(dbName)
 }    
 
-    
-dbCreate <- function(dbName, type) {
-    if(missing(type))
-        type <- filehashOption()$defaultType
+setGeneric("dbCreate", function(db, ...) standardGeneric("dbCreate"))
 
-    dbStartup(dbName, type, "create")
-    TRUE
+setMethod("dbCreate", "ANY",
+          function(db, type = NULL, ...) {
+              if(is.null(type))
+                  type <- filehashOption()$defaultType
+
+              dbStartup(db, type, "create")
+              TRUE
+          })
+          
+## dbCreate <- function(dbName, type) {
+##     if(missing(type))
+##         type <- filehashOption()$defaultType
+##     
+##     dbStartup(dbName, type, "create")
+##     TRUE
+## }
+
+setGeneric("dbInit", function(db, ...) standardGeneric("dbInit"))
+
+setMethod("dbInit", "ANY",
+          function(db, type = NULL, ...) {
+              if(is.null(type))
+                  type <- filehashOption()$defaultType
+              dbStartup(db, type, "initialize")
+          })
+
+dbInitialize <- function(dbName, type) {
+    .Deprecated("dbInit")
 }
 
-dbInit <- dbInitialize <- function(dbName, type) {
-    if(missing(type))
-        type <- filehashOption()$defaultType
-    dbStartup(dbName, type, "initialize")
-}
+## dbInit <- dbInitialize <- function(dbName, type) {
+##     if(missing(type))
+##         type <- filehashOption()$defaultType
+##     dbStartup(dbName, type, "initialize")
+## }
 
 ######################################################################
 ## Set options and retrieve list of options
@@ -101,42 +125,62 @@ filehashOption <- function(...) {
 ######################################################################
 ## Load active bindings into an environment
 
-dbLoad <- function(db, env = parent.frame(), keys = NULL) {
-    if(is.character(db))
-        db <- dbInitialize(db)  ## use the default DB type
-    if(is.null(keys))
-        keys <- dbList(db)
-    active <- sapply(keys, function(k) {
-        exists(k, env, inherits = FALSE)
-    })
-    if(any(active)) {
-        warning("keys with active/regular bindings ignored: ",
-                paste(sQuote(keys[active]), collapse = ", "))
-        keys <- keys[!active]
-    }                      
-    make.f <- function(k) {
-        key <- k
-        function(value) {
-            if(!missing(value)) {
-                dbInsert(db, key, value)
-                invisible(value)
-            }
-            else {
-                obj <- dbFetch(db, key)
-                obj
-            }
-        }
-    }
-    for(k in keys) 
-        makeActiveBinding(k, make.f(k), env)
-    invisible(keys)
-}
+setGeneric("dbLoad", function(db, ...) standardGeneric("dbLoad"))
 
+setMethod("dbLoad", "filehash",
+          function(db, env = parent.frame(2), keys = NULL) {
+              if(is.null(keys))
+                  keys <- dbList(db)
+              active <- sapply(keys, function(k) {
+                  exists(k, env, inherits = FALSE)
+              })
+              if(any(active)) {
+                  warning("keys with active/regular bindings ignored: ",
+                          paste(sQuote(keys[active]), collapse = ", "))
+                  keys <- keys[!active]
+              }                      
+              make.f <- function(k) {
+                  key <- k
+                  function(value) {
+                      if(!missing(value)) {
+                          dbInsert(db, key, value)
+                          invisible(value)
+                      }
+                      else {
+                          obj <- dbFetch(db, key)
+                          obj
+                      }
+                  }
+              }
+              for(k in keys) 
+                  makeActiveBinding(k, make.f(k), env)
+              invisible(keys)
+          })
+
+setGeneric("dbLazyLoad", function(db, ...) standardGeneric("dbLazyLoad"))
+
+setMethod("dbLazyLoad", "filehash",
+          function(db, env = parent.frame(2), keys = NULL) {
+              if(is.character(db))
+                  db
+              if(is.null(keys))
+                  keys <- dbList(db)
+              expr <- quote(dbFetch(db, key))
+              
+              wrap <- function(x, env) {
+                  key <- x
+                  delayedAssign(x, dbFetch(db, key), environment(), env)            
+              }
+              for(k in keys) 
+                  wrap(k, env)
+              invisible(keys)
+          })
+          
 ## Load active bindings into an environment and return the environment
 
 db2env <- function(db) {
     if(is.character(db))
-        db <- dbInitialize(db)  ## use the default DB type
+        db <- dbInit(db)  ## use the default DB type
     env <- new.env(hash = TRUE)
     dbLoad(db, env)
     env
@@ -179,14 +223,14 @@ setMethod("lapply", signature(X = "filehash"),
 
 setGeneric("getMap", function(db) standardGeneric("getMap"))
 
-setGeneric("dbInsert", function(db, key, value) standardGeneric("dbInsert"))
-setGeneric("dbFetch", function(db, key) standardGeneric("dbFetch"))
-setGeneric("dbExists", function(db, key) standardGeneric("dbExists"))
-setGeneric("dbList", function(db) standardGeneric("dbList"))
-setGeneric("dbDelete", function(db, key) standardGeneric("dbDelete"))
-setGeneric("dbReorganize", function(db) standardGeneric("dbReorganize"))
-setGeneric("dbUnlink", function(db) standardGeneric("dbUnlink"))
-setGeneric("dbDisconnect", function(db) standardGeneric("dbDisconnect"))
+setGeneric("dbInsert", function(db, key, value, ...) standardGeneric("dbInsert"))
+setGeneric("dbFetch", function(db, key, ...) standardGeneric("dbFetch"))
+setGeneric("dbExists", function(db, key, ...) standardGeneric("dbExists"))
+setGeneric("dbList", function(db, ...) standardGeneric("dbList"))
+setGeneric("dbDelete", function(db, key, ...) standardGeneric("dbDelete"))
+setGeneric("dbReorganize", function(db, ...) standardGeneric("dbReorganize"))
+setGeneric("dbUnlink", function(db, ...) standardGeneric("dbUnlink"))
+setGeneric("dbDisconnect", function(db, ...) standardGeneric("dbDisconnect"))
 
 ######################################################################
 ## Extractor/replacement
@@ -214,21 +258,22 @@ setReplaceMethod("$", signature(x = "filehash", name = "character"),
                  })
 
 
-## Need to define these because they're not automatically caught
+## Need to define these because they're not automatically caught.
+## Don't need this if R >= 2.4.0.
 
 setReplaceMethod("[[", signature(x = "filehash", i = "numeric", j = "missing"),
                  function(x, i, j, value) {
-                     stop("use of numeric indices not allowed")
+                     stop("numeric indices not allowed")
                  })
 
 setMethod("[[", signature(x = "filehash", i = "numeric", j = "missing"),
           function(x, i, j) {
-              stop("use of numeric indices not allowed")
+              stop("numeric indices not allowed")
           })
 
 setMethod("[", signature(x = "filehash", i = "ANY", j = "ANY", drop = "missing"),
-          function(x, i, j) {
-              stop("use of non-character indices via '[' not allowed")
+          function(x, i, j, drop) {
+              stop("multiple indices via '[' not allowed")
           })
 
 

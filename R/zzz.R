@@ -14,8 +14,8 @@
 
 .onAttach <- function(lib, pkg) {
     dcf <- read.dcf(file.path(lib, pkg, "DESCRIPTION"))
-    msg <- paste(dcf[, "Title"], " (version ",
-                 as.character(dcf[, "Version"]), ")", sep = "")
+    msg <- gettextf("%s (version %s %s)", dcf[, "Title"],
+                    as.character(dcf[, "Version"]), dcf[, "Date"])
     writeLines(strwrap(msg))
 }
 
