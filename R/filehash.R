@@ -27,6 +27,8 @@ setMethod("dbName", "filehash", function(db) db@name)
 
 setMethod("show", "filehash",
           function(object) {
+              if(length(object@name) == 0)
+                  stop("database does not have a name")
               cat(gettextf("'%s' database '%s'\n", as.character(class(object)),
                            object@name))
           })
@@ -36,7 +38,7 @@ setMethod("show", "filehash",
 
 registerFormatDB <- function(name, funlist) {
     if(!all(c("initialize", "create") %in% names(funlist)))
-        stop("need both 'initialize' and 'create' functions")
+        stop("need both 'initialize' and 'create' functions in 'funlist'")
     r <- list(list(create = funlist[["create"]],
                    initialize = funlist[["initialize"]]))
     names(r) <- name
@@ -150,6 +152,8 @@ setMethod("dbLoad", "filehash",
           function(db, env = parent.frame(2), keys = NULL) {
               if(is.null(keys))
                   keys <- dbList(db)
+              else if(!is.character(keys))
+                  stop("'keys' should be a character vector")
               active <- sapply(keys, function(k) {
                   exists(k, env, inherits = FALSE)
               })
@@ -180,11 +184,11 @@ setGeneric("dbLazyLoad", function(db, ...) standardGeneric("dbLazyLoad"))
 
 setMethod("dbLazyLoad", "filehash",
           function(db, env = parent.frame(2), keys = NULL) {
-              if(is.character(db))
-                  db
               if(is.null(keys))
                   keys <- dbList(db)
-              expr <- quote(dbFetch(db, key))
+              else if(!is.character(keys))
+                  stop("'keys' should be a character vector")
+              ## expr <- quote(dbFetch(db, key))
               
               wrap <- function(x, env) {
                   key <- x
@@ -240,8 +244,10 @@ setMethod("lapply", signature(X = "filehash"),
 ######################################################################
 ## Database interface
 
-setGeneric("getMap", function(db) standardGeneric("getMap"))
-
+setGeneric("dbMultiFetch", function(db, key, ...) standardGeneric("dbMultiFetch"))
+setGeneric("dbReconnect", function(db, ...) standardGeneric("dbReconnect"))
+setGeneric("dbFirst", function(db, ...) standardGeneric("dbFirst"))
+setGeneric("dbNext", function(db, ...) standardGeneric("dbNext"))
 setGeneric("dbInsert", function(db, key, value, ...) standardGeneric("dbInsert"))
 setGeneric("dbFetch", function(db, key, ...) standardGeneric("dbFetch"))
 setGeneric("dbExists", function(db, key, ...) standardGeneric("dbExists"))

@@ -72,27 +72,26 @@
   }
 }
 
+\section{Additional slots for "filehashDB1"}{
+  \describe{
+    \item{\code{datafile}:}{full path to the database file.}
+    \item{\code{filecon}:}{connection to the database file.}
+    \item{\code{meta}:}{list for database metadata.}
+  }
+}
+
+\section{Additional slots for "filehashRDS"}{
+  \describe{
+    \item{dir:}{Directory where files are stored.}
+  }
+}
+
 \section{Additional slots for "filehashDB"}{
   \describe{
     \item{\code{datafile}:}{Object of class \code{"character"}, full
       path to the database file.}
     \item{\code{mapfile}:}{Object of class \code{"character"}, full path
       to the index file.}
-  }
-}
-
-\section{Additional slots for "filehashRDS"}{
-  \describe{
-    \item{dbDir:}{Directory where files are stored.}
-  }
-}
-
-\section{Additional slots for "filehashDB1"}{
-  \describe{
-    \item{\code{datafile}:}{full path to the database file.}
-    \item{\code{readcon}:}{"read" connection to the database file.}
-    \item{\code{appendcon}:}{"append" connection to the database file.}
-    \item{\code{meta}:}{list for database metadata.}
   }
 }
 
@@ -132,7 +131,8 @@
       indices are allowed}
     \item{$,$<-}{elements of a database can be accessed using the \code{$}
       operator much like with a list or environment}
-    \item{lapply}{works much like \code{lapply} with lists; a list is returned.}
+    \item{lapply}{works much like \code{lapply} with lists; a list is
+      returned.}
   }
 }
 

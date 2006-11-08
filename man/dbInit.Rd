@@ -4,6 +4,8 @@
 \alias{dbCreate}
 \alias{dbCreate,ANY-method}
 \alias{dbInit,ANY-method}
+\alias{dbReconnect}
+\alias{dbReconnect,filehashDB1-method}
 
 %\alias{dbInitialize}
 
@@ -14,13 +16,15 @@
 \usage{
 dbCreate(db, ...)
 dbInit(db, ...)
+dbReconnect(db, ...)
 
 \S4method{dbCreate}{ANY}(db, type)
 \S4method{dbInit}{ANY}(db, type)
+\S4method{dbReconnect}{filehashDB1}(db)
 }
 
 \arguments{
-  \item{db}{character, name of database}
+  \item{db}{name of database or a database object}
   \item{type}{type of database format.  If missing, the default type
     will be used}
   \item{...}{other arguments passed to methods}

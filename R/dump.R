@@ -17,30 +17,31 @@
 ## 02110-1301, USA
 #####################################################################
 
-dumpImage <- function(dbName = "Rworkspace") {
+dumpImage <- function(dbName = "Rworkspace", type = NULL) {
     dumpObjects(list = ls(envir = globalenv(), all.names = TRUE),
                 dbName = dbName, envir = globalenv())
 }
 
-dumpObjects <- function(..., list = character(0), dbName, envir = parent.frame()) {
+dumpObjects <- function(..., list = character(0), dbName, type = NULL,
+                        envir = parent.frame()) {
     names <- as.character(substitute(list(...)))[-1]
     list <- c(list, names)
-    if(!dbCreate(dbName))
+    if(!dbCreate(dbName, type))
         stop("could not create database file")
-    db <- dbInit(dbName)
+    db <- dbInit(dbName, type)
 
     for(i in seq(along = list)) 
         dbInsert(db, list[i], get(list[i], envir))
     db
 }
 
-dumpDF <- function(data, dbName = NULL) {
+dumpDF <- function(data, dbName = NULL, type = NULL) {
     if(is.null(dbName))
         dbName <- as.character(substitute(data))
-    dumpList(as.list(data), dbName = dbName)
+    dumpList(as.list(data), dbName = dbName, type = type)
 }
 
-dumpList <- function(data, dbName = NULL) {
+dumpList <- function(data, dbName = NULL, type = NULL) {
     if(!is.list(data))
         stop("'data' must be a list")
     vnames <- names(data)
@@ -50,9 +51,9 @@ dumpList <- function(data, dbName = NULL) {
     if(is.null(dbName))
         dbName <- as.character(substitute(data))
     
-    if(!dbCreate(dbName))
+    if(!dbCreate(dbName, type))
         stop("could not create database file")
-    db <- dbInit(dbName)
+    db <- dbInit(dbName, type)
 
     for(i in seq(along = vnames))
         dbInsert(db, vnames[i], data[[vnames[i]]])

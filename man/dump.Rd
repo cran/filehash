@@ -9,16 +9,18 @@
   Dump R objects to a filehash database
 }
 \usage{
-dumpObjects(..., list = character(0), dbName, envir = parent.frame())
-dumpImage(dbName = "Rworkspace")
-dumpDF(data, dbName = NULL)
-dumpList(data, dbName = NULL)
+dumpObjects(..., list = character(0), dbName, type = NULL, envir = parent.frame())
+dumpImage(dbName = "Rworkspace", type = NULL)
+dumpDF(data, dbName = NULL, type = NULL)
+dumpList(data, dbName = NULL, type = NULL)
 }
 
 \arguments{
   \item{\dots}{R objects to dump}
   \item{list}{character vector of names of objects to dump}
-  \item{dbName}{character, name of database to which objects should be dumped}
+  \item{dbName}{character, name of database to which objects should be
+    dumped}
+  \item{type}{type of database to create}
   \item{envir}{environment from which to obtain objects}
   \item{data}{a data frame or a list}
 }

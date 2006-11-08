@@ -1,3 +1,14 @@
+Version 0.9
+-----------
+
+* For 'filehashRDS' class, the 'dbDir' slot has been renamed to 'dir'.
+
+* An attempt has been made to normalize the error handling to make it
+consistent.
+
+* The various 'dump' functions have been given a 'type' argument
+
+
 Version 0.8
 -----------
 
