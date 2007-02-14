@@ -22,6 +22,13 @@
 
 setClass("filehash", representation(name = "character"))
 
+setValidity("filehash", function(object) {
+    if(length(object@name) == 0)
+        "database name has length 0"
+    else
+        TRUE
+})
+
 setGeneric("dbName", function(db) standardGeneric("dbName"))
 setMethod("dbName", "filehash", function(db) db@name)
 
@@ -64,8 +71,9 @@ filehashFormats <- function(...) {
 
 createEmptyFile <- function(name) {
     ## If the file already exists, it is overwritten
-    con <- file(name, "wb")
-    close(con)
+    ## con <- file(name, "wb")
+    ## close(con)
+    file.create(name)
 }
 
 ## Create necessary database files.  On successful creation, return

@@ -1,3 +1,5 @@
+importFrom(utils, normalizePath)
+
 ## Classes
 exportClasses(
               "filehash",
