@@ -1,6 +1,6 @@
 Package:  filehash
-Version:  0.9-2
-Date:  2007-03-12
+Version:  0.9-4
+Date:  2007-04-09
 LazyLoad:  yes
 Depends:  R (>= 2.4.1), methods
 Imports:  utils
@@ -11,4 +11,4 @@ Maintainer:  Roger D. Peng <rpeng@jhsph.edu>
 Description:  Simple key-value database
 License:  GNU GPL (version 2 or later)
 URL:  http://sandybox.typepad.com/software/
-Packaged: Thu Mar 15 11:18:49 2007; rpeng
+Packaged: Tue Apr 10 08:52:08 2007; rpeng

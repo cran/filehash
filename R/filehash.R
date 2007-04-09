@@ -157,7 +157,7 @@ filehashOption <- function(...) {
 setGeneric("dbLoad", function(db, ...) standardGeneric("dbLoad"))
 
 setMethod("dbLoad", "filehash",
-          function(db, env = parent.frame(2), keys = NULL) {
+          function(db, env = parent.frame(2), keys = NULL, ...) {
               if(is.null(keys))
                   keys <- dbList(db)
               else if(!is.character(keys))
@@ -191,7 +191,7 @@ setMethod("dbLoad", "filehash",
 setGeneric("dbLazyLoad", function(db, ...) standardGeneric("dbLazyLoad"))
 
 setMethod("dbLazyLoad", "filehash",
-          function(db, env = parent.frame(2), keys = NULL) {
+          function(db, env = parent.frame(2), keys = NULL, ...) {
               if(is.null(keys))
                   keys <- dbList(db)
               else if(!is.character(keys))

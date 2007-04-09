@@ -14,8 +14,8 @@ db2env(db)
 dbLoad(db, ...)
 dbLazyLoad(db, ...)
 
-\S4method{dbLoad}{filehash}(db, env = parent.frame(), keys = NULL)
-\S4method{dbLazyLoad}{filehash}(db, env = parent.frame(), keys = NULL)
+\S4method{dbLoad}{filehash}(db, env = parent.frame(2), keys = NULL, ...)
+\S4method{dbLazyLoad}{filehash}(db, env = parent.frame(2), keys = NULL, ...)
 }
 \arguments{
   \item{db}{database object}

@@ -18,9 +18,9 @@ dbCreate(db, ...)
 dbInit(db, ...)
 dbReconnect(db, ...)
 
-\S4method{dbCreate}{ANY}(db, type)
-\S4method{dbInit}{ANY}(db, type)
-\S4method{dbReconnect}{filehashDB1}(db)
+\S4method{dbCreate}{ANY}(db, type = NULL, ...)
+\S4method{dbInit}{ANY}(db, type = NULL, ...)
+\S4method{dbReconnect}{filehashDB1}(db, ...)
 }
 
 \arguments{
