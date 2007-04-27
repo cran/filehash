@@ -68,14 +68,6 @@ filehashFormats <- function(...) {
 }
 
 ######################################################################
-
-createEmptyFile <- function(name) {
-    ## If the file already exists, it is overwritten
-    ## con <- file(name, "wb")
-    ## close(con)
-    file.create(name)
-}
-
 ## Create necessary database files.  On successful creation, return
 ## TRUE.  If the database already exists, don't do anything but return
 ## TRUE (and print a message).  If there's any other strange
@@ -107,14 +99,6 @@ setMethod("dbCreate", "ANY",
               TRUE
           })
           
-## dbCreate <- function(dbName, type) {
-##     if(missing(type))
-##         type <- filehashOption()$defaultType
-##     
-##     dbStartup(dbName, type, "create")
-##     TRUE
-## }
-
 setGeneric("dbInit", function(db, ...) standardGeneric("dbInit"))
 
 setMethod("dbInit", "ANY",
@@ -123,16 +107,6 @@ setMethod("dbInit", "ANY",
                   type <- filehashOption()$defaultType
               dbStartup(db, type, "initialize")
           })
-
-dbInitialize <- function(dbName, type) {
-    .Deprecated("dbInit")
-}
-
-## dbInit <- dbInitialize <- function(dbName, type) {
-##     if(missing(type))
-##         type <- filehashOption()$defaultType
-##     dbStartup(dbName, type, "initialize")
-## }
 
 ######################################################################
 ## Set options and retrieve list of options
@@ -196,7 +170,6 @@ setMethod("dbLazyLoad", "filehash",
                   keys <- dbList(db)
               else if(!is.character(keys))
                   stop("'keys' should be a character vector")
-              ## expr <- quote(dbFetch(db, key))
               
               wrap <- function(x, env) {
                   key <- x
@@ -211,7 +184,7 @@ setMethod("dbLazyLoad", "filehash",
 
 db2env <- function(db) {
     if(is.character(db))
-        db <- dbInit(db)  ## use the default DB type
+        db <- dbInit(db)  ## use the default type
     env <- new.env(hash = TRUE)
     dbLoad(db, env)
     env
@@ -243,19 +216,10 @@ setMethod("lapply", signature(X = "filehash"),
               rval
           })
 
-## setGeneric("names")
-## setMethod("names", signature(x = "filehash"),
-##           function(x) {
-## 
-##           })
-
 ######################################################################
 ## Database interface
 
 setGeneric("dbMultiFetch", function(db, key, ...) standardGeneric("dbMultiFetch"))
-setGeneric("dbReconnect", function(db, ...) standardGeneric("dbReconnect"))
-setGeneric("dbFirst", function(db, ...) standardGeneric("dbFirst"))
-setGeneric("dbNext", function(db, ...) standardGeneric("dbNext"))
 setGeneric("dbInsert", function(db, key, value, ...) standardGeneric("dbInsert"))
 setGeneric("dbFetch", function(db, key, ...) standardGeneric("dbFetch"))
 setGeneric("dbExists", function(db, key, ...) standardGeneric("dbExists"))
@@ -263,7 +227,6 @@ setGeneric("dbList", function(db, ...) standardGeneric("dbList"))
 setGeneric("dbDelete", function(db, key, ...) standardGeneric("dbDelete"))
 setGeneric("dbReorganize", function(db, ...) standardGeneric("dbReorganize"))
 setGeneric("dbUnlink", function(db, ...) standardGeneric("dbUnlink"))
-setGeneric("dbDisconnect", function(db, ...) standardGeneric("dbDisconnect"))
 
 ######################################################################
 ## Extractor/replacement
@@ -318,10 +281,7 @@ setMethod("[", signature(x = "filehash", i = "ANY", j = "ANY", drop = "missing")
 ## 'serialize()' changed from 2.3.0 to 2.4.0 so we need this function
 ## for back compatibility
 toBytes <- function(x) {
-    if(getRversion() < package_version("2.4.0"))
-        charToRaw(serialize(x, NULL))
-    else
-        serialize(x, NULL)
+    serialize(x, NULL)
 }
 
 

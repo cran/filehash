@@ -12,7 +12,6 @@
 \alias{dbDelete}
 \alias{dbReorganize}
 \alias{dbUnlink}
-\alias{dbDisconnect}
 \alias{dbDelete,filehashDB,character-method}
 \alias{dbExists,filehashDB,character-method}
 \alias{dbFetch,filehashDB,character-method}
@@ -28,7 +27,6 @@
 \alias{dbInsert,filehashDB1,character-method}
 \alias{dbList,filehashDB1-method}
 \alias{dbUnlink,filehashDB1-method}
-\alias{dbDisconnect,filehashDB1-method}
 \alias{dbReorganize,filehashDB1-method}
 \alias{dbDelete,filehashRDS,character-method}
 \alias{dbExists,filehashRDS,character-method}
@@ -75,8 +73,8 @@
 \section{Additional slots for "filehashDB1"}{
   \describe{
     \item{\code{datafile}:}{full path to the database file.}
-    \item{\code{filecon}:}{connection to the database file.}
-    \item{\code{meta}:}{list for database metadata.}
+    \item{\code{meta}:}{list containing an environment for database
+      metadata.}
   }
 }
 
@@ -86,19 +84,10 @@
   }
 }
 
-\section{Additional slots for "filehashDB"}{
-  \describe{
-    \item{\code{datafile}:}{Object of class \code{"character"}, full
-      path to the database file.}
-    \item{\code{mapfile}:}{Object of class \code{"character"}, full path
-      to the index file.}
-  }
-}
-
 \section{Methods}{
   \describe{
     \item{dbDelete}{The \code{dbDelete} function is for deleting
-      elements, but for the \code{"DB"} format all it does is remove the
+      elements, but for the \code{"DB1"} format all it does is remove the
       key from the lookup table. 
       The actual data are still in the database (but inaccessible).  If
       you reinsert data for the same key, the new data are simply
@@ -121,8 +110,6 @@
       \emph{experimental}.  \code{dbReorganize} is not needed when using
       the \code{"RDS"} format.}
     \item{dbUnlink}{delete an entire database from the disk}
-    \item{dbDisconnect}{close any open connections associated with a
-      database object.}
     \item{show}{print method}
     \item{with}{allows \code{with} to be used with \code{"filehash"}
       objects much like it can be used with lists or data frames}
