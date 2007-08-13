@@ -48,7 +48,7 @@ setValidity("filehashDB1",
 
 createDB1 <- function(dbName) {
     if(!hasWorkingFtell())
-        stop("need working 'ftell()' to use DB1 format")
+        stop("need working 'ftell()' to use 'DB1' format")
     if(!file.exists(dbName))
         file.create(dbName)
     else
@@ -212,7 +212,7 @@ writeKeyValue <- function(con, key, value) {
                 writeKey(con, key)
         
                 ## Serialize data to raw bytes
-                byteData <- toBytes(value)
+                byteData <- serialize(value, NULL)
                 
                 ## Write out length of data
                 len <- length(byteData)
@@ -389,11 +389,12 @@ setMethod("dbReorganize", "filehashDB1",
               keys <- dbList(db)
 
               ## Copy all keys to temporary database
+              message("reorganizing database contents...")
               for(key in keys) 
                   dbInsert(tempdb, key, dbFetch(db, key))
 
-              dbDisconnect(tempdb)
-              dbDisconnect(db)
+              ## dbDisconnect(tempdb)
+              ## dbDisconnect(db)
               status <- file.rename(tempdata, datafile)
               
               if(!isTRUE(status)) {
@@ -402,13 +403,14 @@ setMethod("dbReorganize", "filehashDB1",
                           tempdata)
                   return(FALSE)
               }
-              message("original database has been disconnected; ",
-                      "reload with 'dbInit'")
+              ## message("original database has been disconnected; ",
+              ##         "reload with 'dbInit'")
+              message("database reorganized; reload database with 'dbInit'")
               TRUE
           })
 
 
-######################################################################
+################################################################################
 ## Test system's ftell()
 
 hasWorkingFtell <- function() {
