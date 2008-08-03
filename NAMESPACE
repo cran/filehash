@@ -1,5 +1,7 @@
 importFrom(utils, normalizePath)
 
+useDynLib(filehash)
+
 ## Classes
 exportClasses(
               "filehash",
@@ -46,5 +48,14 @@ export(
        "dumpObjects",
        "db2env",
        "dumpImage",
-       "dumpList"
+       "dumpList",
+       "dumpEnv"
        )
+
+## Stack and Queue stuff
+exportClasses("stack", "queue")
+exportMethods("isEmpty", "top", "push", "pop")
+exportMethods("mpush")
+
+export("createQ", "initQ")
+export("createS", "initS")
