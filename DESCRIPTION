@@ -1,7 +1,7 @@
 Package: filehash
-Version: 2.2
-Date: 2011-07-21
-Depends: R (>= 2.13.0), methods
+Version: 2.2-1
+Date: 2012-03-12
+Depends: R (>= 2.14.0), methods
 Imports: utils
 Collate: filehash.R filehash-DB1.R filehash-RDS.R coerce.R dump.R
         hash.R queue.R stack.R zzz.R
@@ -11,6 +11,6 @@ Maintainer: Roger D. Peng <rpeng@jhsph.edu>
 Description: Simple key-value database
 License: GPL (>= 2)
 URL: http://github.com/rdpeng/filehash
-Packaged: 2011-07-21 17:13:05 UTC; rdpeng
+Packaged: 2012-03-14 21:32:21 UTC; rdpeng
 Repository: CRAN
-Date/Publication: 2011-07-23 13:51:59
+Date/Publication: 2012-03-14 21:38:44
