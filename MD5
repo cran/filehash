@@ -1,5 +1,5 @@
-208032b0711d9d56516fa93da13b0eb0 *DESCRIPTION
-fb55267f3dd49ec13a17422a5129001d *NAMESPACE
+a39134dd2cf43f3a803368455bc58d4c *DESCRIPTION
+369879e4ab19e6934e6136e2f5a86f9f *NAMESPACE
 45232e1ac4dac258e45556bd5f43123c *R/coerce.R
 90f64221f6f44767deed77323c0d4db2 *R/dump.R
 f1f5dacbd07b4d877ce22357621de223 *R/filehash-DB1.R
@@ -9,12 +9,13 @@ b0769cf1a3599dced35d14ce286a651c *R/filehash.R
 b096fd971b2464562c885b8f6d3caeab *R/queue.R
 a75a45aef48fc227a52cc6144180eed0 *R/stack.R
 5d89ecc5246dec2fa4b5b6550d00c1bc *R/zzz.R
+10e5b8df9f40377f09a06d0b58c8df84 *build/vignette.rds
 ed14a5c660ea0f0e723a406175038eb7 *inst/CITATION
 b128d2038f8d0c5c554b72de80298e4a *inst/COPYING
 44422cadef3c067ffd43b9f00a18aa9d *inst/NEWS
-b2631aaa4f28eae69ba9e6b9b5bbbe80 *inst/doc/combined.bib
+6b5ee8f3a31a761dd38bd0238efbdfc1 *inst/doc/filehash.R
 7fb6c57e7c3a9b572359b21e60e07d3f *inst/doc/filehash.Rnw
-ab927b64464b28544854d94616c58d4e *inst/doc/filehash.pdf
+aea26390af3553ecdb33c92218906c32 *inst/doc/filehash.pdf
 196634a9bcac54d5a8c2f30c622caf8d *man/createQ.Rd
 76d0e8fb13ec5e82d2db2fe69c153399 *man/createS.Rd
 994907132b6735cd18cb2e58fbe38246 *man/db2env.Rd
@@ -39,3 +40,5 @@ f00793baa7e5a70812957058ec569332 *tests/misc/create-testdb.R
 5b7464763d85ba9406c9e4dddce80d97 *tests/testdb-v2.0
 40829c8958672fbc650561dde99ea5a0 *tests/versions.R
 6e36a99376f5c4281e1acc0885d9d91c *tests/versions.Rout.save
+b2631aaa4f28eae69ba9e6b9b5bbbe80 *vignettes/combined.bib
+7fb6c57e7c3a9b572359b21e60e07d3f *vignettes/filehash.Rnw
