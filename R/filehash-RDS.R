@@ -61,6 +61,9 @@ initializeRDS <- function(dbName) {
 ## reverses the operation.
 
 mangleName <- function(oname) {
+        if(any(grep("@",oname,fixed=TRUE))) 
+                stop("RDS format cannot cope with objects with @ characters",
+                        " in their names")
         gsub("([A-Z])", "@\\1", oname, perl = TRUE)
 }
 
@@ -117,20 +120,24 @@ setMethod("dbFetch", signature(db = "filehashRDS", key = "character"),
           function(db, key, ...) {
                   ## Create filename from key
                   ofile <- objectFile(db, key)
-
                   ## Open connection
-                  con <- tryCatch({
-                          gzfile(ofile, "rb")
+                  val <- tryCatch({
+                          con<-gzfile(ofile)
+                          # note it is necessary to split creating and opening
+                          # the connection into two steps so that the connection
+                          # can be closed/destroyed successfully if ofile does 
+                          # not exist (avoiding connection leaks).
+                          open(con,"rb")
+                          ## Read data
+                          unserialize(con)
                   }, condition = function(cond) {
                           cond
+                  }, finally = {
+                          close(con)
                   })
-                  if(inherits(con, "condition")) 
+                  if(inherits(val, "condition")) 
                           stop(gettextf("unable to obtain value for key '%s'",
                                         key))
-                  on.exit(close(con))
-
-                  ## Read data
-                  val <- unserialize(con)
                   val
           })
 
@@ -163,7 +170,7 @@ setMethod("dbDelete", signature(db = "filehashRDS", key = "character"),
 
                   ## remove/delete the file
                   status <- file.remove(ofile)
-                  invisible(isTRUE(status))
+                  invisible(isTRUE(all(status)))
           })
 
 setMethod("dbUnlink", "filehashRDS",
