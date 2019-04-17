@@ -1,7 +1,7 @@
 
-R version 2.10.1 Patched (--)
-Copyright (C)  The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
+R version 3.5.2 Patched (2019-01-10 r75975) -- "Eggshell Igloo"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin18.2.0 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -191,10 +191,10 @@ Error in readSingleKey(con, map, key): unable to obtain value for key 'c'
 > db$b <- runif(1000)
 > 
 > dbLoad(db)  ## 'a', 'b'
-> summary(a)
+> summary(a, digits = 4)
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
 -3.036000 -0.642100  0.172000  0.004131  0.614100  2.107000 
-> summary(b)
+> summary(b, digits = 4)
     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 0.004583 0.229900 0.478600 0.482200 0.729200 0.999800 
 > 
@@ -203,10 +203,10 @@ Error in readSingleKey(con, map, key): unable to obtain value for key 'c'
 > 
 > dbLazyLoad(db)
 > 
-> summary(a)
+> summary(a, digits = 4)
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
 -3.036000 -0.642100  0.172000  0.004131  0.614100  2.107000 
-> summary(b)
+> summary(b, digits = 4)
     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 0.004583 0.229900 0.478600 0.482200 0.729200 0.999800 
 > 
@@ -233,10 +233,10 @@ Error in readSingleKey(con, map, key): unable to obtain value for key 'c'
 > dbInsert(db, "c", runif(1000))
 > dbInsert(db, "c", runif(1000))
 > 
-> summary(db$b)
+> summary(db$b, digits = 4)
     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 -2.76800 -0.65520 -0.06100 -0.01269  0.65240  3.73900 
-> summary(db$c)
+> summary(db$c, digits = 4)
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
 0.0002346 0.2416000 0.4813000 0.4938000 0.7492000 0.9992000 
 > 
@@ -253,10 +253,10 @@ Finished; reload database with 'dbInit'
 > print(file.info(db@datafile)$size)
 [1] 16245
 > 
-> summary(db$b)
+> summary(db$b, digits = 4)
     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 -2.76800 -0.65520 -0.06100 -0.01269  0.65240  3.73900 
-> summary(db$c)
+> summary(db$c, digits = 4)
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
 0.0002346 0.2416000 0.4813000 0.4938000 0.7492000 0.9992000 
 > 
@@ -302,3 +302,6 @@ Finished; reload database with 'dbInit'
 > top(db)
 [1] 2
 > 
+> proc.time()
+   user  system elapsed 
+  0.217   0.054   0.263 
