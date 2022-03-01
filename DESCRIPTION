@@ -1,5 +1,5 @@
 Package: filehash
-Version: 2.4-2
+Version: 2.4-3
 Depends: R (>= 3.0.0), methods
 Collate: filehash.R filehash-DB1.R filehash-RDS.R coerce.R dump.R
         hash.R queue.R stack.R zzz.R
@@ -14,8 +14,8 @@ Description: Implements a simple key-value style database where character string
   database are currently available and new formats can easily be incorporated by third parties for use in the
   'filehash' framework.
 License: GPL (>= 2)
-URL: http://github.com/rdpeng/filehash
+URL: https://github.com/rdpeng/filehash
 NeedsCompilation: yes
-Packaged: 2019-04-16 13:23:43 UTC; rdpeng
+Packaged: 2022-03-01 21:10:33 UTC; rdpeng
 Repository: CRAN
-Date/Publication: 2019-04-17 10:10:03 UTC
+Date/Publication: 2022-03-01 21:40:02 UTC
