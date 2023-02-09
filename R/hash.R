@@ -1,10 +1,30 @@
+##########################################################################
+## Copyright (C) 2006-2023, Roger D. Peng <roger.peng @ austin.utexas.edu>
+##     
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2 of the License, or
+## (at your option) any later version.
+## 
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+## 
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, write to the Free Software
+## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+## 02110-1301, USA
+##########################################################################
+
+#' @importFrom digest digest
 sha1 <- function(object, skip = 14L) {
-	## Setting 'skip = 14' gives us the same results as
-	## 'digest(object, "sha1")'
-	bytes <- serialize(object, NULL)
-	.Call(C_sha1_object, bytes, skip)
+        bytes <- serialize(object, NULL)
+        digest(bytes, algo = "sha1", skip = skip, serialize = FALSE)
 }
 
+
+#' @importFrom digest digest
 sha1_file <- function(filename, skip = 0L) {
-	.Call(C_sha1_file, filename, skip)
+	digest(filename, algo = "sha1", file = TRUE)
 }

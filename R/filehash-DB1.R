@@ -1,5 +1,5 @@
-######################################################################
-## Copyright (C) 2006--2008, Roger D. Peng <rpeng@jhsph.edu>
+##########################################################################
+## Copyright (C) 2006-2023, Roger D. Peng <roger.peng @ austin.utexas.edu>
 ##     
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA
-#####################################################################
+##########################################################################
 
 ######################################################################
 ## Class 'filehashDB1'
@@ -31,6 +31,13 @@
 ## 'meta' is a list of functions for updating the file size of the
 ## database and the file map.
 
+#' Filehash DB1 Class
+#' 
+#' An implementation of filehash databases using a single large file
+#' 
+#' @exportClass filehashDB1
+#' @slot datafile full path to the database file (filehashDB1 only)
+#' @slot meta list containing an environment for database metadata (filehashDB1 only)
 setClass("filehashDB1",
          representation(datafile = "character",
                         meta = "list"),
@@ -81,6 +88,7 @@ makeMetaEnv <- function(filename) {
              getsize = getsize)
 }
 
+#' @importFrom methods new
 initializeDB1 <- function(dbName) {
         if(!hasWorkingFtell())
                 stop("need working 'ftell()' to use DB1 format")
@@ -271,6 +279,12 @@ openDBConn <- function(filename, mode) {
         con
 }
 
+#' @exportMethod dbInsert
+#' @describeIn filehashDB1 Insert an R object into a filehashDB1 database
+#' @param db a filehashDB1 object
+#' @param key character, the name of an R object in the database
+#' @param value an R object
+#' @param ... arguments passed to other methods
 setMethod("dbInsert",
           signature(db = "filehashDB1", key = "character", value = "ANY"),
           function(db, key, value, ...) {
@@ -284,6 +298,10 @@ setMethod("dbInsert",
                   invisible(writeKeyValue(con, key, value))
           })
 
+#' @exportMethod dbFetch
+#' @describeIn filehashDB1 Retrieve an object from a filehash DB1 database
+#' @param db a filehashDB1 object
+#' @param key character, the name of an R object in the database
 setMethod("dbFetch",
           signature(db = "filehashDB1", key = "character"),
           function(db, key, ...) {
@@ -301,6 +319,11 @@ setMethod("dbFetch",
                   val
           })
 
+#' @exportMethod dbMultiFetch
+#' @describeIn filehashDB1 Retrieve multiple objects from a filehash DB1 database
+#' @param db a filehashDB1 object
+#' @param key character, the name of an R object in the database
+#' @details For \code{dbMultiFetch}, \code{key} is a character vector of keys.
 setMethod("dbMultiFetch",
           signature(db = "filehashDB1", key = "character"),
           function(db, key, ...) {
@@ -317,12 +340,16 @@ setMethod("dbMultiFetch",
                   readKeys(con, map, key)
           })
 
+#' @exportMethod dbExists
+#' @describeIn filehashDB1 Determine if a key exists in a filehash DB1 database
 setMethod("dbExists", signature(db = "filehashDB1", key = "character"),
           function(db, key, ...) {
                   dbkeys <- dbList(db)
                   key %in% dbkeys
           })
 
+#' @exportMethod dbList
+#' @describeIn filehashDB1 Return a character vector containing all keys in a database
 setMethod("dbList", "filehashDB1",
           function(db, ...) {
                   con <- openDBConn(db@datafile, "rb")
@@ -344,6 +371,8 @@ setMethod("dbList", "filehashDB1",
                   }
           })
 
+#' @exportMethod dbDelete
+#' @describeIn filehashDB1 Delete a key and it's corresponding object from a filehashDB1 database
 setMethod("dbDelete", signature(db = "filehashDB1", key = "character"),
           function(db, key, ...) {
                   con <- openDBConn(db@datafile, "ab")
@@ -356,6 +385,8 @@ setMethod("dbDelete", signature(db = "filehashDB1", key = "character"),
                   invisible(writeNullKeyValue(con, key))
           })
 
+#' @exportMethod dbUnlink
+#' @describeIn filehashDB1 Delete an entire filehashDB1 database
 setMethod("dbUnlink", "filehashDB1",
           function(db, ...) {
                   file.remove(db@datafile)
@@ -409,6 +440,8 @@ reorganizeDB <- function(db, ...) {
         TRUE
 }
 
+#' @exportMethod dbReorganize
+#' @describeIn filehashDB1 Reorganize and compactify a filehahsDB1 database
 setMethod("dbReorganize", "filehashDB1", reorganizeDB)
 
 
