@@ -1,4 +1,4 @@
-20724f93d384ede97512d0c16d6000a2 *DESCRIPTION
+429edf520a5a5e84eff6c4e08da3e213 *DESCRIPTION
 e00630e645e7bcccced0e1c7f076a564 *NAMESPACE
 d616b0dd18e8720a826ad26a47822491 *R/coerce.R
 9a36d6a2bde06d5bd4ab703b8fefc95f *R/dump.R
@@ -9,13 +9,13 @@ b403c6b0b86cc5956f70032490f763a1 *R/filehash-RDS.R
 0f7971384ed2968b93bdf7c65371ace1 *R/queue.R
 b7c62b4bda3d2ba06aa5a7e6d4e6c643 *R/stack.R
 8a7451a692b071134c636d60149babcc *R/zzz.R
-355b3d9a3f2fbdd1f201b85ebbc1143f *build/vignette.rds
+5c0f9e2f7ce8d6873deb7924fd62b2aa *build/vignette.rds
 ecdc7b4c6aa03fb03e692c4aae262f0f *inst/CITATION
 b128d2038f8d0c5c554b72de80298e4a *inst/COPYING
 44422cadef3c067ffd43b9f00a18aa9d *inst/NEWS
 6b5ee8f3a31a761dd38bd0238efbdfc1 *inst/doc/filehash.R
 f157f4577bb1a29a560f9b630307ec6e *inst/doc/filehash.Rnw
-b234ee585f3036311b02739a2bcf4c82 *inst/doc/filehash.pdf
+4cc21ec797df615c7b0fe0870909c2d2 *inst/doc/filehash.pdf
 213020161cc470bf12a962570dc705b9 *man/coerceDB1RDS.Rd
 8de7a1f9dd5f2fc8e04eaf2acaa8a4b7 *man/coerceDB1list.Rd
 64f34df62cbba4a3248fc6e1fd25af5f *man/coercelist.Rd
@@ -33,6 +33,8 @@ c3731d591111c7c43706214355246382 *man/filehashDB1-class.Rd
 1f69eebc69b381da6e96c802a8c93003 *src/lockfile.c
 43efc34c262443523d94f93365daed8f *src/readKeyMap.c
 d83a9585d249e9a093cb3c545cf49834 *tests/SHA1SUM
+0f61d2a42f4be10553e49773a3a1cad6 *tests/digest.R
+5c3ca4f1f55fd14aa15b3e8bfd089cdb *tests/digest.Rout.save
 f00793baa7e5a70812957058ec569332 *tests/misc/create-testdb.R
 22b196fc72a3d39aa18a6aec0fe7112a *tests/reg-tests.R
 52831c2f2906ae2967aff550a096cd37 *tests/reg-tests.Rout.save
